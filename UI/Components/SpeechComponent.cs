@@ -1,4 +1,4 @@
-﻿using LiveSplit.Model;
+using LiveSplit.Model;
 using LiveSplit.Model.Comparisons;
 using LiveSplit.TimeFormatters;
 using LiveSplit.UI.Components;
@@ -93,7 +93,7 @@ namespace LiveSplit.UI.Components
             if (timeDifference != null)
             {
                 var timeDifferenceText = FormatTime(timeDifference.Value);
-                var previousSegment = LiveSplitStateHelper.GetPreviousSegment(State, splitIndex, false, false, true, State.CurrentComparison, State.CurrentTimingMethod);
+                var previousSegment = LiveSplitStateHelper.GetPreviousSegmentDelta(State, splitIndex, State.CurrentComparison, State.CurrentTimingMethod);
                 var previousSegmentText = FormatTime(previousSegment ?? TimeSpan.Zero);
 
                 if (timeDifference < TimeSpan.Zero)
@@ -119,7 +119,7 @@ namespace LiveSplit.UI.Components
             }
             //Check for best segment
             TimeSpan? curSegment;
-            curSegment = LiveSplitStateHelper.GetPreviousSegment(State, splitIndex, false, true, true, State.CurrentComparison, State.CurrentTimingMethod);
+            curSegment = LiveSplitStateHelper.GetLiveSegmentTime(State, splitIndex, State.CurrentTimingMethod);
             if (curSegment != null)
             {
                 if (State.Run[splitIndex].BestSegmentTime[State.CurrentTimingMethod] == null || curSegment < State.Run[splitIndex].BestSegmentTime[State.CurrentTimingMethod])
@@ -155,7 +155,7 @@ namespace LiveSplit.UI.Components
             //Check for best segment
             TimeSpan? curSegment;
             var splitIndex = State.CurrentSplitIndex - 1;
-            curSegment = LiveSplitStateHelper.GetPreviousSegment(State, splitIndex, false, true, true, State.CurrentComparison, State.CurrentTimingMethod);
+            curSegment = LiveSplitStateHelper.GetLiveSegmentTime(State, splitIndex, State.CurrentTimingMethod);
             if (curSegment != null)
             {
                 if (State.Run[splitIndex].BestSegmentTime[State.CurrentTimingMethod] == null || curSegment < State.Run[splitIndex].BestSegmentTime[State.CurrentTimingMethod])
@@ -246,10 +246,6 @@ namespace LiveSplit.UI.Components
         public override void SetSettings(System.Xml.XmlNode settings)
         {
             //Settings.SetSettings(settings);
-        }
-
-        public override void RenameComparison(string oldName, string newName)
-        {
         }
 
         public override void Update(IInvalidator invalidator, LiveSplitState state, float width, float height, LayoutMode mode)
